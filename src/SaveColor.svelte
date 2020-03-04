@@ -1,14 +1,63 @@
 <script>
+  import { onMount } from "svelte";
   import Slider from "./Slider.svelte";
   import Textfield from "@smui/textfield";
+  import HelperText from "@smui/textfield/helper-text/index";
+
   import Button, { Label } from "@smui/button";
   import { rgbToHex } from "./helpers/color.js";
+  import colorStore from "./stores/color-store.js";
+  import selectedColor from "./stores/selected-color.js";
 
+  let mode = "new";
+  let id = null;
   let red = 100;
-  let green = 0;
-  let blue = 100;
+  let green = 200;
+  let blue = 10;
   let name = "";
+
+  $: canSaveColor = name.length >= 3;
+
+  onMount(() => {
+    reset();
+    selectedColor.subscribe(color => {
+      if (!color) {
+        return;
+      }
+      console.log(color, "color");
+      ({ red, green, blue, name, id } = color);
+      mode = "edit";
+    });
+  });
+
   $: hex = rgbToHex(red, green, blue);
+
+  function submitColor() {
+    if (mode === "new") {
+      saveColor();
+      return;
+    }
+
+    editColor();
+  }
+
+  function saveColor() {
+    colorStore.addColor(red, green, blue, name);
+    reset();
+  }
+
+  function editColor() {
+    colorStore.updateColor(red, green, blue, name, id);
+    reset();
+  }
+
+  function reset() {
+    red = 200;
+    green = 100;
+    blue = 10;
+    mode = "new";
+    name = "";
+  }
 </script>
 
 <style>
@@ -29,19 +78,46 @@
     justify-content: space-around;
     padding: 5px;
   }
+  :global(.save-color-btn) {
+    width: 100%;
+  }
 </style>
 
 <div class="form" bp="grid vertical-end">
 
   <div bp="8 offset-2">
-    <Textfield bind:value={name} label="Name" fullwidth="true" />
+    <form on:submit|preventDefault={submitColor}>
+      <Textfield bind:value={name} label="Name" fullwidth="true" />
+    </form>
+  </div>
+  {#if mode === 'edit'}
+    <div bp="1">
+      <Button
+        on:click={editColor}
+        disabled={!canSaveColor}
+        variant="unelevated"
+        color="primary">
+        <Label>Edit Color</Label>
+      </Button>
 
-  </div>
-  <div bp="2">
-    <Button style="width: 100%;" variant="unelevated" color="primary">
-      <Label>Save Color</Label>
-    </Button>
-  </div>
+    </div>
+    <div bp="1">
+      <Button on:click={reset} variant="unelevated" color="secondary">
+        <Label>Cancel</Label>
+      </Button>
+    </div>
+  {:else}
+    <div bp="2">
+      <Button
+        on:click={saveColor}
+        disabled={!canSaveColor}
+        class="save-color-btn"
+        variant="unelevated"
+        color="primary">
+        <Label>Save Color</Label>
+      </Button>
+    </div>
+  {/if}
 </div>
 
 <div class="color-controls">
@@ -61,7 +137,7 @@
   <div bp="offset-2 5">
     RGB
     <br />
-    ({red}, {green}, {blue})
+    r={red}, g={green}, b={blue}
   </div>
   <div bp="5">
     HEX
