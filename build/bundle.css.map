@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../../App.svelte",
+    "../../SaveColor.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n  import SavedColor from \"./SaveColor.svelte\";\n  import SearchColor from \"./SearchColor.svelte\";\n  import ColorTable from \"./ColorTable.svelte\";\n</script>\n\n<style>\n  div div div {\n    background-color: rgb(219, 100, 20);\n  }\n</style>\n\n<div bp=\"grid\">\n  <div bp=\"4 offset-2\">\n    <h1>Color Picker</h1>\n  </div>\n</div>\n\n\n<SavedColor />\n",
+    "<script>\n  import Slider from \"./Slider.svelte\";\n  import Textfield from \"@smui/textfield\";\n  import Button, { Label } from \"@smui/button\";\n\n  let name = \"\";\n</script>\n\n<style>\n  #form {\n    margin-bottom: 50px;\n  }\n</style>\n\n<div id=\"form\" bp=\"grid vertical-end\">\n\n  <div bp=\"8 offset-2@md\">\n    <Textfield bind:value={name} label=\"Name\" fullwidth=\"true\" />\n\n  </div>\n  <div bp=\"2 2@sm\">\n    <Button style=\"width: 100%;\" variant=\"unelevated\" color=\"primary\">\n      <Label>Save Color</Label>\n    </Button>\n  </div>\n</div>\n\n<div class=\"color-controls\">\n  <Slider bgColor=\"#AA0000\" />\n  <Slider bgColor=\"#00AA00\" />\n  <Slider bgColor=\"#0000AA\" />\n\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AAOE,kBAAG,CAAC,GAAG,CAAC,GAAG,eAAC,CAAC,AACX,gBAAgB,CAAE,IAAI,GAAG,CAAC,CAAC,GAAG,CAAC,CAAC,EAAE,CAAC,AACrC,CAAC;ACAD,KAAK,eAAC,CAAC,AACL,aAAa,CAAE,IAAI,AACrB,CAAC"
+}
